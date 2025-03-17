@@ -24,7 +24,7 @@ I am passionate about **Cybersecurity** and am committed to continuously expandi
 - **SQL**: Queries and database management.
 - **PowerShell**: Used for SAM dumps, user management, and remote administration on Windows systems.
 
-**Cybersecurity**:
+**Cybersecurity (Currently enhancing skills through private courses, with plans to undertake the official specialization course this year) **:
 - Advanced and defensive techniques in **Cybersecurity**.
 - **Firewalls**: Configuration and management (OpnSense, pfSense, iptables).
 - **Ethical Hacking**: Network scanning, vulnerability analysis, penetration testing.
