@@ -40,9 +40,8 @@ I am passionate about **Cybersecurity** and am committed to continuously expandi
 - **Monitoring Tools**: **Zabbix**.
 - **Task Automation**: Use of **Ansible** and **Scripting**.
 
-### 📜 Carta de recomendación
-### 📜 Carta de recomendación
-Puedes ver mi carta de recomendación aquí: [Carta de recomendación](https://github.com/RubenNetForce/RubenNetForce/blob/main/Certificado/Carta%20Recomendaci%C3%B3n%20Rub%C3%A9n.pdf).
+### 📜 Recommendation Letter
+You can view my recommendation letter here: [Recommendation Letter](https://github.com/RubenNetForce/RubenNetForce/blob/main/Certificado/Carta%20Recomendaci%C3%B3n%20Rub%C3%A9n.pdf).
 
 ### 📫 How to reach me:
 - Connect with me on **[LinkedIn](https://www.linkedin.com/in/rub%C3%A9n-rodriguez-a95b301bb)**.
