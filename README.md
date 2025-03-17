@@ -1,4 +1,5 @@
 👋 Hi, I’m Ruben
+I have always been passionate about **Cybersecurity**, which drives my ongoing learning and desire to improve the safety of systems and networks.
 
 ### About me:
 I'm a **System Administrator** with a degree in **ASIR (Administration of Computer Systems and Networks)**. I graduated a year ago and have been focused on IT ever since. Staying updated on the latest news, systems, and versions is essential for me to effectively maintain and secure infrastructures. My passion lies in **Cybersecurity**, and I'm committed to enhancing my skills continually.
