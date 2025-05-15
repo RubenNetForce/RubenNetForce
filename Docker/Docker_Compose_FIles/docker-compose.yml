@@ -1,0 +1,56 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: dolibarr-lb
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - dolibarr1
+      - dolibarr2
+
+  db:
+    image: mariadb:10.6
+    container_name: dolibarr-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: dolibarrpass
+      MYSQL_DATABASE: dolibarr
+      MYSQL_USER: dolibarr
+      MYSQL_PASSWORD: dolibarrpass
+    volumes:
+      - db_data:/var/lib/mysql
+
+  dolibarr1:
+    image: tuxgasy/dolibarr
+    container_name: dolibarr1
+    environment:
+      DOLI_DB_HOST: db
+      DOLI_DB_PORT: 3306
+      DOLI_DB_NAME: dolibarr
+      DOLI_DB_USER: dolibarr
+      DOLI_DB_PASSWORD: dolibarrpass
+    expose:
+      - "80"
+    depends_on:
+      - db
+
+  dolibarr2:
+    image: tuxgasy/dolibarr
+    container_name: dolibarr2
+    environment:
+      DOLI_DB_HOST: db
+      DOLI_DB_PORT: 3306
+      DOLI_DB_NAME: dolibarr
+      DOLI_DB_USER: dolibarr
+      DOLI_DB_PASSWORD: dolibarrpass
+    expose:
+      - "80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
