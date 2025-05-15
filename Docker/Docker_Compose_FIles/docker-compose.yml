@@ -1,5 +1,5 @@
 #Important, This docker-compose only work if you download the nginx.conf, because, this is an file with NGINX load balancer, and it's necessary to work, the nginx.conf
-#The file nginx.conf, is in Nginx directory.
+#The file nginx.conf, is in Web_Server_Files/Nginx.
 version: '3.7'
 
 services:
