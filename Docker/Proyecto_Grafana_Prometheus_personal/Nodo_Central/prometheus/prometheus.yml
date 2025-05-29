@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'node_exporters'
+    static_configs:
+      - targets:
+          - '192.168.239.181:9100'  # VM-WEB
+          - '192.168.239.182:9100'  # VM-DB
+
+  - job_name: 'wordpress_prompress'
+    metrics_path: /wp-json/prompress/v1/metrics
+    static_configs:
+      - targets:
+          - '192.168.239.181:80'  # WordPress
