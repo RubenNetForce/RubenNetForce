@@ -7,10 +7,10 @@ services:
     ports:
       - "80:80"
     environment:
-      WORDPRESS_DB_HOST: 192.168.239.182:3306
-      WORDPRESS_DB_USER: wpuser
-      WORDPRESS_DB_PASSWORD: wppass
-      WORDPRESS_DB_NAME: wpdb
+      WORDPRESS_DB_HOST: ip:3306
+      WORDPRESS_DB_USER: 
+      WORDPRESS_DB_PASSWORD: 
+      WORDPRESS_DB_NAME: 
     volumes:
       - wordpress_data:/var/www/html
 
