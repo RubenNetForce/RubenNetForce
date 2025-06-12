@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>SysAI Asistente</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>SysAI Asistente</h1>
+    
+    {% if mostrar_input_ruta %}
+      <form method="post">
+        <label>Introduce la ruta donde buscar archivos pesados:</label>
+        <input type="text" name="ruta" placeholder="/home, /var, /mnt, /" required />
+        <button type="submit">Buscar</button>
+      </form>
+    {% else %}
+      <form method="post">
+        <input type="text" name="prompt" placeholder="Escribe tu pregunta" required />
+        <button type="submit">Enviar</button>
+      </form>
+    {% endif %}
+    
+    {% if respuesta %}
+      <pre class="response">{{ respuesta }}</pre>
+    {% endif %}
+    
+{% if sugerencia == "volver_disco" %}
+  <form method="post">
+    <input type="hidden" name="prompt" value="volver_disco">
+    <button type="submit"> Volver al listado de almacenamiento</button>
+  </form>
+{% endif %}
+  </div>
+</body>
+</html>
