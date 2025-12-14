@@ -1,0 +1,2 @@
+This script installs a secure ELK stack on Ubuntu or any Linux distribution using Docker.
+Important: The script generates a .env file containing your credentials. Do not share this file after execution, as it contains sensitive information.
