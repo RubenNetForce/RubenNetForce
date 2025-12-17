@@ -36,7 +36,7 @@ Do \*\*not\*\* share this file after execution, as it contains sensitive informa
 
 \- Minimum 2 GB RAM recommended
 
-\- Linux server (Ubuntu, Debian, CentOS, etc.)
+\- Linux server (Ubuntu or Debian.)
 
 
 
