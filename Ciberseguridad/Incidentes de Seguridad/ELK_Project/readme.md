@@ -44,17 +44,3 @@ Do \*\*not\*\* share this file after execution, as it contains sensitive informa
 
 
 
-\##  Usage
-
-
-
-1\. \*\*Clone the repository:\*\*
-
-
-
-```bash
-
-git clone https://github.com/yourusername/secure-elk-installer.git
-
-cd secure-elk-installer
-
