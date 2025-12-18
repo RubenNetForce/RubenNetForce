@@ -37,7 +37,7 @@ fi
 # -------------------------------
 # VARIABLES
 # -------------------------------
-read -p "IP del servidor: " HOST_IP
+read -p "IP del servidor (ip a interfaz por donde salga o se comunique): " HOST_IP
 [ -z "$HOST_IP" ] && exit 1
 
 read -s -p "Password elastic: " ELASTIC_PASSWORD
@@ -45,14 +45,27 @@ echo
 read -s -p "Password kibana_system: " KIBANA_PASSWORD
 echo
 
-CERT_CN="elastic.local"
-CERT_O="Elastic"
-CERT_C="ES"
+# -------------------------------
+# ENCRYPTION KEYS ALERTING
+# -------------------------------
+# Generamos 3 claves aleatorias de 32 caracteres
+XPACK_ENCRYPTED_SAVED_OBJECTS_KEY=$(openssl rand -hex 32)
+XPACK_REPORTING_KEY=$(openssl rand -hex 32)
+XPACK_SECURITY_KEY=$(openssl rand -hex 32)
 
-mkdir -p certs logstash/pipeline
+echo "[INFO] Claves de cifrado generadas para Kibana"
 
 # -------------------------------
-# CERTIFICADOS
+# DATOS CERTIFICADO
+# -------------------------------
+read -p "CN (Common Name, por ejemplo elastic.local): " CERT_CN
+read -p "O (Organization, por ejemplo Elastic): " CERT_O
+read -p "C (Country, por ejemplo ES): " CERT_C
+
+mkdir -p certs logstash/pipeline config
+
+# -------------------------------
+# CERTIFICADOS SSL
 # -------------------------------
 openssl req -x509 -newkey rsa:4096 -nodes -days 365 \
   -keyout certs/elastic.key \
@@ -60,11 +73,37 @@ openssl req -x509 -newkey rsa:4096 -nodes -days 365 \
   -subj "/CN=${CERT_CN}/O=${CERT_O}/C=${CERT_C}" \
   -addext "subjectAltName=IP:${HOST_IP}"
 
-# copiar certificados de forma explicita
 cp certs/elastic.crt certs/kibana.crt
 cp certs/elastic.key certs/kibana.key
 cp certs/elastic.crt certs/logstash.crt
 cp certs/elastic.key certs/logstash.key
+
+# -------------------------------
+# CORRECCION DE PERMISOS
+# -------------------------------
+echo "[INFO] Ajustando permisos de certificados y claves..."
+chown 1000:1000 certs/*.key certs/*.crt
+chmod 600 certs/*.key
+chmod 644 certs/*.crt
+
+# -------------------------------
+# KIBANA CONFIG
+# -------------------------------
+cat > config/kibana.yml <<EOF
+server.host: "0.0.0.0"
+server.ssl.enabled: true
+server.ssl.certificate: /usr/share/kibana/certs/kibana.crt
+server.ssl.key: /usr/share/kibana/certs/kibana.key
+
+elasticsearch.hosts: ["https://elasticsearch:9200"]
+elasticsearch.username: kibana_system
+elasticsearch.password: ${KIBANA_PASSWORD}
+elasticsearch.ssl.verificationMode: none
+
+xpack.encryptedSavedObjects.encryptionKey: "${XPACK_ENCRYPTED_SAVED_OBJECTS_KEY}"
+xpack.reporting.encryptionKey: "${XPACK_REPORTING_KEY}"
+xpack.security.encryptionKey: "${XPACK_SECURITY_KEY}"
+EOF
 
 # -------------------------------
 # ENV
@@ -122,16 +161,9 @@ services:
     container_name: kibana
     networks: [elastic_net]
     env_file: .env
-    environment:
-      SERVER_SSL_ENABLED: "true"
-      SERVER_SSL_CERTIFICATE: /usr/share/kibana/certs/kibana.crt
-      SERVER_SSL_KEY: /usr/share/kibana/certs/kibana.key
-      ELASTICSEARCH_HOSTS: https://elasticsearch:9200
-      ELASTICSEARCH_USERNAME: kibana_system
-      ELASTICSEARCH_PASSWORD: \${KIBANA_PASSWORD}
-      ELASTICSEARCH_SSL_VERIFICATIONMODE: none
     volumes:
       - ./certs:/usr/share/kibana/certs
+      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
     ports:
       - "\${HOST_IP}:5601:5601"
     depends_on: [elasticsearch]
@@ -153,11 +185,12 @@ EOF
 # -------------------------------
 docker compose up -d elasticsearch
 
+echo "[INFO] Esperando a que Elasticsearch est  disponible..."
 until docker exec elasticsearch curl -sk -u elastic:${ELASTIC_PASSWORD} https://localhost:9200 >/dev/null; do
   sleep 5
 done
 
-# cambiar password de kibana_system
+echo "[INFO] Cambiando password de kibana_system..."
 docker exec elasticsearch curl -sk -u elastic:${ELASTIC_PASSWORD} \
   -X POST https://localhost:9200/_security/user/kibana_system/_password \
   -H "Content-Type: application/json" \
@@ -165,5 +198,5 @@ docker exec elasticsearch curl -sk -u elastic:${ELASTIC_PASSWORD} \
 
 docker compose up -d
 
-echo "Elastic OK"
+echo "[OK] Elastic y Kibana levantados correctamente"
 echo "Kibana https://${HOST_IP}:5601"
